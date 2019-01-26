@@ -4,7 +4,6 @@
 package scala.async.internal
 
 import scala.language.higherKinds
-import scala.reflect.macros.Context
 
 /**
  * An abstraction over a future system.
@@ -114,7 +113,7 @@ object ScalaConcurrentFutureSystem extends FutureSystem {
       Future(a.splice)(execContext.splice)
     }
 
-    def onComplete[A, U](future: Expr[Fut[A]], fun: Expr[scala.util.Try[A] => U],
+    def onComplete[A, U0](future: Expr[Fut[A]], fun: Expr[scala.util.Try[A] => U0],
                          execContext: Expr[ExecContext]): Expr[Unit] = reify {
       future.splice.onComplete(fun.splice)(execContext.splice)
     }

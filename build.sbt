@@ -4,7 +4,8 @@ scalaModuleSettings
 
 scalaVersionsByJvm in ThisBuild := {
   val v212 = "2.12.6"
-  val v213 = "2.13.0-M5"
+  //val v213 = "2.13.0-M5"
+  val v213 = "2.13.0-pre-e823c80-SNAPSHOT"
 
   val allFalse = List(v212 -> false, v213 -> false)
   Map(

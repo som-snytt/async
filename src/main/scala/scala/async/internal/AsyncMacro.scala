@@ -1,8 +1,7 @@
 package scala.async.internal
 
 object AsyncMacro {
-  def apply(c0: reflect.macros.Context, base: AsyncBase)(body0: c0.Tree): AsyncMacro { val c: c0.type } = {
-    import language.reflectiveCalls
+  def apply(c0: Context, base: AsyncBase)(body0: c0.Tree): AsyncMacro { val c: c0.type } = {
 
     // Use an attachment on RootClass as a sneaky place for a per-Global cache
     val att = c0.internal.attachments(c0.universe.rootMirror.RootClass)
@@ -30,7 +29,7 @@ private[async] trait AsyncMacro
   extends AnfTransform with TransformUtils with Lifter
   with ExprBuilder with AsyncTransform with AsyncAnalysis with LiveVariables {
 
-  val c: scala.reflect.macros.Context
+  val c: Context
   val body: c.Tree
   var containsAwait: c.Tree => Boolean
   val asyncNames: AsyncNames[c.universe.type]

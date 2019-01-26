@@ -2,8 +2,7 @@ package scala.async.internal
 
 import scala.collection.mutable
 
-import java.util
-import java.util.function.{IntConsumer, IntPredicate}
+import java.util.function.IntConsumer
 
 import scala.collection.immutable.IntMap
 
@@ -26,11 +25,11 @@ trait LiveVariables {
     // the result map indicates in which states a given field should be nulled out
     val liveVarsMap: mutable.LinkedHashMap[Tree, StateSet] = liveVars(asyncStates, liftables)
 
-    var assignsOf = mutable.LinkedHashMap[Int, List[Tree]]()
+    val assignsOf = mutable.LinkedHashMap[Int, List[Tree]]()
 
     for ((fld, where) <- liveVarsMap) {
       where.foreach { new IntConsumer { def accept(state: Int): Unit = {
-        assignsOf get state match {
+        assignsOf.get(state) match {
           case None =>
             assignsOf += (state -> List(fld))
           case Some(trees) if !trees.exists(_.symbol == fld.symbol) =>
@@ -210,7 +209,7 @@ trait LiveVariables {
         val referenced = fieldsUsedIn(cs)
         captured ++= referenced.captured
         val LVentryNew = LVexit(cs.state) ++ referenced.used
-        if (!LVentryNew.sameElements(LVentryOld)) {
+        if (!LVentryNew.iterator.sameElements(LVentryOld)) {
           LVentry = LVentry.updated(cs.state, LVentryNew)
           entryChanged ::= cs
         }
@@ -222,7 +221,7 @@ trait LiveVariables {
       for (p <- pred) {
         val LVexitOld = LVexit(p.state)
         val LVexitNew = p.nextStates.flatMap(succ => LVentry(succ)).toSet
-        if (!LVexitNew.sameElements(LVexitOld)) {
+        if (!LVexitNew.iterator.sameElements(LVexitOld)) {
           LVexit = LVexit.updated(p.state, LVexitNew)
           exitChanged ::= p
         }
@@ -274,7 +273,7 @@ trait LiveVariables {
 
     val nullOutAt: mutable.LinkedHashMap[Tree, StateSet] =
       for ((fld, lastStates) <- lastUsages) yield {
-        var result = new StateSet
+        val result = new StateSet
         lastStates.foreach(new IntConsumer { def accept(s: Int): Unit = {
           if (s != finalState.state) {
             val lastAsyncState = asyncStates.find(_.state == s).get

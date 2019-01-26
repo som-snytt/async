@@ -2,8 +2,6 @@ package scala
 package async
 package internal
 
-import scala.language.experimental.macros
-import scala.reflect.macros.Context
 import scala.concurrent.Future
 
 object ScalaConcurrentAsync extends AsyncBase {

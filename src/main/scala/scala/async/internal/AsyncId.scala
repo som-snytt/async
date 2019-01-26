@@ -5,7 +5,6 @@
 package scala.async.internal
 
 import language.experimental.macros
-import scala.reflect.macros.Context
 import scala.reflect.api.Universe
 
 object AsyncId extends AsyncBase {
@@ -55,8 +54,6 @@ object IdentityFutureSystem extends FutureSystem {
     val c: c0.type = c0
     import c.universe._
 
-    def execContext: Expr[ExecContext] = c.Expr[Unit](Literal(Constant(())))
-
     def promType[A: WeakTypeTag]: Type = weakTypeOf[Box[A]]
     def tryType[A: WeakTypeTag]: Type = weakTypeOf[scala.util.Try[A]]
     def execContextType: Type = weakTypeOf[Unit]
@@ -71,7 +68,7 @@ object IdentityFutureSystem extends FutureSystem {
 
     def future[A: WeakTypeTag](t: Expr[A])(execContext: Expr[ExecContext]) = t
 
-    def onComplete[A, U](future: Expr[Fut[A]], fun: Expr[Tryy[A] => U],
+    def onComplete[A, U0](future: Expr[Fut[A]], fun: Expr[Tryy[A] => U0],
                          execContext: Expr[ExecContext]): Expr[Unit] = reify {
       fun.splice.apply(util.Success(future.splice))
       c.Expr[Unit](Literal(Constant(()))).splice
