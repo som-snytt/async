@@ -209,7 +209,7 @@ trait LiveVariables {
         val referenced = fieldsUsedIn(cs)
         captured ++= referenced.captured
         val LVentryNew = LVexit(cs.state) ++ referenced.used
-        if (!LVentryNew.iterator.sameElements(LVentryOld)) {
+        if (!LVentryNew.sameElements(LVentryOld)) {
           LVentry = LVentry.updated(cs.state, LVentryNew)
           entryChanged ::= cs
         }
@@ -221,7 +221,7 @@ trait LiveVariables {
       for (p <- pred) {
         val LVexitOld = LVexit(p.state)
         val LVexitNew = p.nextStates.flatMap(succ => LVentry(succ)).toSet
-        if (!LVexitNew.iterator.sameElements(LVexitOld)) {
+        if (!LVexitNew.sameElements(LVexitOld)) {
           LVexit = LVexit.updated(p.state, LVexitNew)
           exitChanged ::= p
         }
